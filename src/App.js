@@ -1,28 +1,29 @@
+import "./App.css";
 
-import './App.css';
+const model = "7VD4WsXHhXD";
+const params = "&play=1&tour=0&log=0";
 
-const model = "7VD4WsXHhXD"
-const params = "&play=1&tour=0&log=0"
-
-async function handleShowcaseLoad(){
-  const showcase_iframe = document.getElementById('showcase_iframe')
-    try {
-      if (showcase_iframe.contentWindow) {
-        let sdk = await showcase_iframe.contentWindow.MP_SDK.connect(showcase_iframe);
-        sdk.App.state.subscribe((state) => {
-          if (state.phase === sdk.App.Phase.PLAYING) {
-            onSdkConnect(sdk);
-          }
-        })
-      }
-    } catch (e) {
-      console.error(e);
-      return;
+async function handleShowcaseLoad() {
+  const showcase_iframe = document.getElementById("showcase_iframe");
+  try {
+    if (showcase_iframe.contentWindow) {
+      let sdk = await showcase_iframe.contentWindow.MP_SDK.connect(
+        showcase_iframe
+      );
+      sdk.App.state.subscribe((state) => {
+        if (state.phase === sdk.App.Phase.PLAYING) {
+          onSdkConnect(sdk);
+        }
+      });
     }
+  } catch (e) {
+    console.error(e);
+    return;
+  }
 }
 
 async function onSdkConnect(sdk) {
-  console.log(sdk)
+  console.log(sdk);
   var [sceneObject] = await sdk.Scene.createObjects(1);
 
   var logoNode = sceneObject.addNode("logoNode");
@@ -89,7 +90,7 @@ async function onSdkConnect(sdk) {
 
   sdk.Scene.configure(function (renderer, THREE, effectComposer) {
     if (true) {
-      console.log(effectComposer)
+      console.log(effectComposer);
       // effectComposer.passes[0] is the renderPass
       let scene = effectComposer.passes[0].scene;
       let camera = effectComposer.passes[0].camera;
@@ -100,8 +101,8 @@ async function onSdkConnect(sdk) {
       );
       outlinePass.visibleEdgeColor = new THREE.Color(1, 1, 1);
       outlinePass.hiddenEdgeColor = new THREE.Color(1, 1, 1);
-      outlinePass.edgeStrength = 4
-      outlinePass.edgeGlow = 1
+      outlinePass.edgeStrength = 4;
+      outlinePass.edgeGlow = 1;
       outlinePass.edgeThickness = 4;
       outlinePass.pulsePeriod = 4;
       outlinePass.selectedObjects = [logoNode.obj3D];
@@ -110,19 +111,23 @@ async function onSdkConnect(sdk) {
   });
 }
 
-
 function App() {
   return (
     <div className="App">
       <iframe
-          title="showcase_iframe"
-          id="showcase_iframe"
-          src={process.env.PUBLIC_URL + "/mp_bundle/showcase.html?m=" + model + params + "&applicationKey=5n1rihzdbgxus7k1exfne27ac"}
-          width="100%"
-          height="100%"
-          onLoad={handleShowcaseLoad}>
-          
-        </iframe>
+        title="showcase_iframe"
+        id="showcase_iframe"
+        src={
+          process.env.PUBLIC_URL +
+          "/mp_bundle/showcase.html?m=" +
+          model +
+          params +
+          "&applicationKey=5n1rihzdbgxus7k1exfne27ac"
+        }
+        width="100%"
+        height="100%"
+        onLoad={handleShowcaseLoad}
+      ></iframe>
     </div>
   );
 }
